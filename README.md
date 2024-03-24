@@ -5,7 +5,7 @@
   </a>
   <h1> Redis Telegram Bot</h1>
   <p>
-    <b>Connect to reddit, using Telegram bot!</b><br>
+    <b>Connect to redis, using Telegram bot!</b><br>
     <b>Feel free to contribute!</b><br>
   </p>
   <br>
