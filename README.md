@@ -1,9 +1,6 @@
 <div align="center">
   <br>
-  <a href="">
-    <img src="res/github/ollama-telegram-readme.png" width="200" height="200">
-  </a>
-  <h1> Redis Telegram Bot</h1>
+  <h1> Redis Telegram Bot based on Ollama Telegram Bot by ruecat</h1>
   <p>
     <b>Connect to redis, using Telegram bot!</b><br>
     <b>Feel free to contribute!</b><br>
@@ -14,6 +11,8 @@
   </p>
   <br>
 </div>
+CREATED BY @ruecat https://github.com/ruecat/ollama-telegram/
+merely edited by me to facilitate pushing msg's to a redis stream, and process them from it. 
 
 ## Features
 Here's features that you get out of the box:
@@ -26,7 +25,7 @@ Here's features that you get out of the box:
 - [x] Docker config & automated tags by [StanleyOneG](https://github.com/StanleyOneG), [ShrirajHegde](https://github.com/ShrirajHegde)
 - [x] History and `/reset` by [ShrirajHegde](https://github.com/ShrirajHegde)
 - [ ] Add more API-related functions [System Prompt Editor, Ollama Version fetcher, etc.]
-- [ ] Redis DB integration
+- [x] Redis DB integration
 - [ ] Update bot UI
 
 ## Prerequisites
