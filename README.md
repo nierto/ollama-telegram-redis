@@ -3,9 +3,9 @@
   <a href="">
     <img src="res/github/ollama-telegram-readme.png" width="200" height="200">
   </a>
-  <h1>🦙 Ollama Telegram Bot</h1>
+  <h1> Redis Telegram Bot</h1>
   <p>
-    <b>Chat with your LLM, using Telegram bot!</b><br>
+    <b>Connect to reddit, using Telegram bot!</b><br>
     <b>Feel free to contribute!</b><br>
   </p>
   <br>
