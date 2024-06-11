@@ -1,61 +1,38 @@
+# >> interactions
 import logging
 import os
 import aiohttp
 import json
 from aiogram import types
 from asyncio import Lock
-from aiohttp import ClientSession, ClientTimeout
 from functools import wraps
 from dotenv import load_dotenv
-# --- Environment
 load_dotenv()
-# --- Environment Checker
 token = os.getenv("TOKEN")
 allowed_ids = list(map(int, os.getenv("USER_IDS", "").split(",")))
 admin_ids = list(map(int, os.getenv("ADMIN_IDS", "").split(",")))
 ollama_base_url = os.getenv("OLLAMA_BASE_URL")
+ollama_port = os.getenv("OLLAMA_PORT", "11434")
 log_level_str = os.getenv("LOG_LEVEL", "INFO")
-timeout = os.getenv("TIMEOUT")
-# --- Other
+allow_all_users_in_groups = bool(int(os.getenv("ALLOW_ALL_USERS_IN_GROUPS", "0")))
 log_levels = list(logging._levelToName.values())
-# ['CRITICAL', 'ERROR', 'WARNING', 'INFO', 'DEBUG', 'NOTSET']
 
-# Set default level to be INFO
 if log_level_str not in log_levels:
     log_level = logging.DEBUG
 else:
     log_level = logging.getLevelName(log_level_str)
-
 logging.basicConfig(level=log_level)
-
-
-# Ollama API
-# Model List
 async def model_list():
     async with aiohttp.ClientSession() as session:
-        url = f"http://{ollama_base_url}:11434/api/tags"
+        url = f"http://{ollama_base_url}:{ollama_port}/api/tags"
         async with session.get(url) as response:
             if response.status == 200:
                 data = await response.json()
                 return data["models"]
             else:
                 return []
-async def generate(payload: dict, modelname: str, prompt: str):
-    timeout = ClientTimeout(total=timeout)
-    # try:
-    async with aiohttp.ClientSession(timeout=timeout) as session:
-        url = f"http://{ollama_base_url}:11434/api/chat"
-
-        # Stream from API
-        async with session.post(url, json=payload) as response:
-            async for chunk in response.content:
-                if chunk:
-                    decoded_chunk = chunk.decode()
-                    if decoded_chunk.strip():
-                        yield json.loads(decoded_chunk)
 
 
-# Aiogram functions & wraps
 def perms_allowed(func):
     @wraps(func)
     async def wrapper(message: types.Message = None, query: types.CallbackQuery = None):
@@ -68,6 +45,8 @@ def perms_allowed(func):
         else:
             if message:
                 if message and message.chat.type in ["supergroup", "group"]:
+                    if allow_all_users_in_groups:
+                        return await func(message)
                     return
                 await message.answer("Access Denied")
             elif query:
@@ -104,16 +83,6 @@ def perms_admins(func):
                 )
 
     return wrapper
-
-
-def md_autofixer(text: str) -> str:
-    # In MarkdownV2, these characters must be escaped: _ * [ ] ( ) ~ ` > # + - = | { } . !
-    escape_chars = r"_[]()~>#+-=|{}.!"
-    # Use a backslash to escape special characters
-    return "".join("\\" + char if char in escape_chars else char for char in text)
-
-
-# Context-Related
 class contextLock:
     lock = Lock()
 
